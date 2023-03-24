@@ -9,6 +9,9 @@ body,
   height: 100%;
   margin: 0;
   padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   overflow: hidden;
 }
@@ -25,6 +28,6 @@ body {
 }
 
 body.selected {
-  cursor: url("../assets/icons-select.png") !important;
+  cursor: url("./assets/icons-select.png"), cell !important;
   /* cursor: cell !important; */
 }

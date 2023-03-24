@@ -1,7 +1,8 @@
 import { Suspense, useRef, useState, useEffect } from "react"
-import { Canvas, useFrame } from "@react-three/fiber"
+import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { easing } from "maath"
 import Model from "./Model"
+import { Center, OrbitControls, PerspectiveCamera } from "@react-three/drei"
 
 function Rig() {
   // state 中可以访问到鼠标的位置，相机的位置
@@ -10,23 +11,33 @@ function Rig() {
   })
 }
 
-export default function App() {
+function Scene() {
   const floor = useRef(null)
+  const { camera } = useThree()
+  const [target, setTarget] = useState([0, 0, 0])
   const [hovered, setHovered] = useState(false)
+
+  const handleClick = (e) => {
+    // 相机的高度不变
+    const newPosition = { ...e.point, y: camera.position.y }
+    camera.position.copy(newPosition)
+  }
+
+  useEffect(() => {
+    console.log("init camera: ", camera.position)
+  }, [])
+
   useEffect(() => {
     // document.body.style.cursor = hovered ? "pointer" : "auto"
     if (hovered) {
-      console.log("hhhh")
       document.body.classList.add("selected")
-      console.log(document.body.classList)
     } else {
       document.body.classList.remove("selected")
-      console.log(document.body.classList)
     }
   }, [hovered])
 
   return (
-    <Canvas shadows camera={{ position: [1, 1.5, 2.5], fov: 50 }}>
+    <>
       <ambientLight />
       <directionalLight position={[-5, 5, 5]} castShadow shadow-mapSize={1024} />
       <group position={[0, -1, 0]}>
@@ -42,12 +53,22 @@ export default function App() {
         ref={floor}
         onPointerOver={() => setHovered(true)}
         onPointerOut={() => setHovered(false)}
-        position={[0, -0.9, 0]}
+        onClick={handleClick}
+        position={[0, -1, 0]}
         rotation={[-0.5 * Math.PI, 0, 0]}>
         <planeGeometry args={[4, 4, 1, 1]} />
-        <meshStandardMaterial transparent opacity={1} />
+        <meshBasicMaterial color="pink" />
       </mesh>
-      <Rig />
+      <OrbitControls camera={camera} target={target} />
+      {/* <Rig /> */}
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <Canvas shadows>
+      <Scene />
     </Canvas>
   )
 }

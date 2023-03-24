@@ -21,12 +21,9 @@ export default function Model(props) {
   const [hovered, setHovered] = useState(false)
   const [index, setIndex] = useState(4)
 
-  useEffect(() => {
-    console.log("get called")
-  }, [])
   // Change cursor on hover-state
   // 因为要修改鼠标样式，属于操作外部系统，使用 useEffect
-  useEffect(() => void (document.body.style.cursor = hovered ? "pointer" : "auto"), [hovered])
+  // useEffect(() => void (document.body.style.cursor = hovered ? "pointer" : "auto"), [hovered])
 
   // Change animation when the index changes
   // 模型上有点击事件，点击只是简单的改变 index 的值
@@ -43,7 +40,7 @@ export default function Model(props) {
   // Tips：避免耗时操作和不必要的状态更新
   useFrame((state, delta) => {
     // Animate the selection halo
-    easing.damp3(halo.current.scale, hovered ? 1.15 : 1, 0.2, delta)
+    // easing.damp3(halo.current.scale, hovered ? 1.15 : 1, 0.2, delta)
     easing.dampC(halo.current.material.color, hovered ? "hotpink" : "aquamarine", 0.2, delta)
   })
 
